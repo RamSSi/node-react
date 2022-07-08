@@ -11,10 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const mongoose = require("mongoose");
-mongoose
-    .connect(
-        "mongodb+srv://kangaram:dkfka519!@boilerplate.d1ly0.mongodb.net/?retryWrites=true&w=majority"
-    )
+mongoose.connect('mongodb+srv://kangaram:dkfka519!@boilerplate.d1ly0.mongodb.net/?retryWrites=true&w=majority')
     .then(() => console.log("MongoDB Connected..."))
     .catch((err) => console.log(err));
 
