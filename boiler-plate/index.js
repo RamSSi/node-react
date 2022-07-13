@@ -33,4 +33,33 @@ app.post("/register", (req, res) => {
     });
 });
 
+app.post('/login', (req, res) => {
+    // 1. 요청된 email을 데이터베이스에서 있는지 찾는다.
+    User.fineOne({ email: req.body.email }, (err, user) => {
+        // 찾을 수 없으면 err, response 반환
+        if (!user) {
+            return res.json({
+                loginSuccess: false,
+                message: "제공된 이메일에 해당하는 유저가 없습니다."
+            })
+        }
+        
+        // 2. 요청된 email이 데이터베이스에 있다면 비밀번호가 맞는지 확인한다.
+        user.comparePassword(req.body.password, (err, isMatch) => {
+            if (!isMatch)
+                return res.json({
+                    loginSuccess: false,
+                    message: "비밀번호가 틀렸습니다.",
+                });
+
+            // 3. 비밀번호가 맞으면 토큰을 생성한다.
+            user.generateToken((err, user) => {
+                if (err) return res.status(400).send(err);
+                
+                // 
+            });
+        });
+    })
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
