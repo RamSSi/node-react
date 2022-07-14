@@ -4,19 +4,12 @@ const port = 5000;
 
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const {
-    auth
-} = require("./middleware/auth");
+const {auth} = require("./middleware/auth");
 
-const {
-    user,
-    User
-} = require("./models/User");
+const {User} = require("./models/User");
 
 // application/x-www-form-urlencoded 형식의 데이터를 분석해서 가져올 수 있음
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({extended: true}));
 // application/json 형식의 데이터를 분석(parse)하여 가져올 수 있음
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -100,8 +93,8 @@ app.get("/api/users/auth", auth, (req, res) => { // auth middleware : endpoint�
         lastname: req.user.lastname,
         role: req.user.role,
         image: req.user.image
-    })
-}) // get request
+    });
+}); // get request
 
 app.get("/api/users/logout", auth, (req, res) => {
     console.log('req.user', req.user);
