@@ -60,7 +60,7 @@ userSchema.methods.comparePassword = function(plainPassword, callback) {
     // planePassword 123456     // database의 암호화된 password "$2b$10$LpVwNTvDMWoiLaHh3TGIUeG8YHbweWlfaLe032yxqBq8BnW9uVogy"
     // 두 개가 같은지 확인! (plainPassword를 암호화하여 확인)
     bcrypt.compare(plainPassword, this.password, function(err, isMatch) {
-        if(err) return callback(err),   // err가 발생하면 err 반환
+        if(err) return callback(err);   // err가 발생하면 err 반환
         callback(null, isMatch);   // 비밀번호가 일치 > true
     })
 }
@@ -68,12 +68,28 @@ userSchema.methods.comparePassword = function(plainPassword, callback) {
 userSchema.methods.generateToken = function(callback) {
     var user = this;
     // jsonwebtoken을 이용해 token 생성
-    var token = jwt.sign(user._id, , 'secretToken');
+    var token = jwt.sign(user._id.toHexString(), "secretToken");
 
     user.token = token;
     user.save(function(err, user) {
         if(err) return callback(err);
         callback(null, user);
+    })
+}
+
+userSchema.statics.findByToken = function(token, callback) {
+    var user = this;
+
+    // token = user._id + 'secretToken'
+    // token을 복호화한다.
+    jwt.verify(token, "secretToken", function(err, decode) {
+        // user id를 통해 user를 찾고
+        // client에서 가져온 token과 DB에 보관된 token이 일치하는지 확인
+
+        user.findOne({"_id": decode, "token": token}, function(err, user) {
+            if(err) return callback(err);
+            callback(null, user);
+        })
     })
 }
 
