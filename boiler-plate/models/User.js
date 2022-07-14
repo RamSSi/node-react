@@ -82,11 +82,11 @@ userSchema.statics.findByToken = function(token, callback) {
 
     // token = user._id + 'secretToken'
     // token을 복호화한다.
-    jwt.verify(token, "secretToken", function(err, decode) {
+    jwt.verify(token, "secretToken", function(err, decoded) {
         // user id를 통해 user를 찾고
         // client에서 가져온 token과 DB에 보관된 token이 일치하는지 확인
 
-        user.findOne({"_id": decode, "token": token}, function(err, user) {
+        user.findOne({"_id": decoded, "token": token}, function(err, user) {
             if(err) return callback(err);
             callback(null, user);
         })

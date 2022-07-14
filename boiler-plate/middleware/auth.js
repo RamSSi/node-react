@@ -9,6 +9,7 @@ let auth = (req, res, next) => {
     // 2. token을 decode(복호화)하여 user를 찾는다.
     User.findByToken(token, (err, user) => {
         if (err) throw err;
+        console.log('req.user', req.user);
         if (!user) return res.json({ isAuth: false, error: true });
 
         // 정보를 index.js에서 사용할 수 있도록 넣어줌
