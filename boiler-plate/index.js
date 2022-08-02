@@ -4,9 +4,9 @@ const port = 5000;
 
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const {auth} = require("./middleware/auth");
+const {auth} = require("./server/middleware/auth");
 
-const {User} = require("./models/User");
+const {User} = require("./server/models/User");
 
 // application/x-www-form-urlencoded 형식의 데이터를 분석해서 가져올 수 있음
 app.use(bodyParser.urlencoded({extended: true}));
@@ -15,11 +15,17 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 const mongoose = require("mongoose");
-mongoose.connect('mongodb+srv://kangaram:dkfka519!@boilerplate.d1ly0.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect("mongodb+srv://kangaram:dkfka519!@boilerplate.d1ly0.mongodb.net/?retryWrites=true&w=majority")
     .then(() => console.log("MongoDB Connected..."))
     .catch((err) => console.log(err));
 
+app.get("/api/hello", (req, res) => {
+    res.send("안녕하세요~");
+});
+
+
 app.get("/", (req, res) => res.send("Hello World!")); // root dir에 도달하면 응답 메시지 전달
+
 
 app.post("/api/users/register", (req, res) => {
     // 회원가입을 할 때 필요한 정보들을 Client에서 가져오면
@@ -39,6 +45,7 @@ app.post("/api/users/register", (req, res) => {
         });
     });
 });
+
 
 app.post('/api/users/login', (req, res) => {
     // 1. 요청된 email을 데이터베이스에서 있는지 찾는다.
@@ -95,6 +102,7 @@ app.get("/api/users/auth", auth, (req, res) => { // auth middleware : endpoint�
         image: req.user.image
     });
 }); // get request
+
 
 app.get("/api/users/logout", auth, (req, res) => {
     console.log('req.user', req.user);
